@@ -22,7 +22,7 @@ class Square:
     def __init__(self,loc: CartPt, size:int):
         self.loc = loc
         self.size = size
-        
+
 class Circle:
     # implements IShape
     def __init__(self, loc: CartPt, radius:int):

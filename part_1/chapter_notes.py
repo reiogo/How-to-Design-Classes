@@ -1,5 +1,9 @@
 from typing import Protocol
 from dataclasses import dataclass
+
+
+
+#START OF CHAPTER ==========================================================================================
 class Coffee:
     def __init__(self, kind:str, price:int, weight:int) -> None:
         self.kind = kind
@@ -12,7 +16,7 @@ class Coffee:
 class CoffeeExamples:
     kona = Coffee("Hawaiian Kona", 2095, 100)
     ethi = Coffee("Ethiopian", 800, 1000)
-    colo = Coffee("Colombia Supreme", 800, 1000)
+    colo = Coffee("Colombia Supreme", 950, 200)
 
 
 

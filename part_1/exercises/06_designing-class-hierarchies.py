@@ -143,3 +143,196 @@ class Condo:
     num_rooms:int
     wheelchair_accessible:bool
 
+# GRAPHICAL USER INTERFACE ====================================================
+
+#interface
+class IGUI(Protocol):
+    pass
+
+#implements IGUI
+@dataclass
+class BoolView:
+    label:str
+    data:str
+
+#implements IGUI
+@dataclass
+class TextFieldView:
+    label:str
+    data:str
+
+#implements IGUI
+@dataclass
+class OptionsView:
+    label:str
+    data:str
+
+#implements IGUI
+@dataclass
+class ColorView:
+    label:str
+    data:str
+
+
+#implements IGUI
+@dataclass
+class Table:
+    rows:ILoRow
+
+#interface
+class ILoGUI(Protocol):
+    pass
+
+class EmptyLoGUI:
+    pass
+
+@dataclass
+class ConsLoGUI:
+    fst: IGUI
+    rst:ILoGUI
+
+
+class ILoRow(Protocol):
+    pass
+
+class EmptyLoRow:
+    pass
+@dataclass
+class ConsLoRow:
+    fst:ILoGUI
+    rst:ILoRow
+
+# Libary Checkout =============================================================================================
+
+#interface 
+class ICheckout(Protocol):
+    pass
+
+#implements ICheckout
+@dataclass
+class Book:
+    title:str
+    cat_id:int
+    author:str
+    pub_year:int
+
+#implements ICheckout
+@dataclass
+class CD:
+    title:str
+    cat_id:int
+    artist:str
+    track_num:int
+
+
+#implements ICheckout
+@dataclass
+class DVD:
+    title:str
+    cat_id:int
+    kind:str
+    length:int #mins
+
+# COMPANY STRUCTURE ==========================================================================================
+
+@dataclass
+class Employee:
+    id:int
+    name:str
+    title:str
+    team:ILoEmployees
+
+#interface
+class ILoEmployees(Protocol):
+    pass
+
+#implements ILoEmployees
+class EmptyLoEmployees:
+    pass
+
+@dataclass
+class ConsLoEmployees:
+    fst:Employee
+    rst:ILoEmployees
+
+john = Employee(2, "john", "support", EmptyLoEmployees())
+katy = Employee(3, "katy", "cto", EmptyLoEmployees())
+
+hank_team = ConsLoEmployees(john,
+                            ConsLoEmployees(katy,EmptyLoEmployees()))
+hank = Employee(1,"hank","ceo", hank_team)
+
+# CARD GAME ==========================================================================================
+
+@dataclass
+class Pebble:
+    color:str
+
+#interface
+class IWallet(Protocol):
+    pass
+
+#implements IWallet
+class EmptyWallet:
+    pass
+
+#implements IWallet
+@dataclass
+class ConsWallet:
+    fst:Pebble
+    rst:IWallet
+
+@dataclass
+class Card:
+    p:Pebble
+    designation:str
+
+#interface
+class IDeck(Protocol):
+    pass
+
+#implements IDeck
+class EmptyDeck:
+    pass
+
+#implements IDeck
+@dataclass
+class ConsDeck:
+    fst:Card
+    rst:IDeck
+
+red_p = Pebble("red")
+
+my_wallet = ConsWallet(red_p, EmptyWallet())
+
+red_card = Card(red_p, "super")
+
+deck = ConsDeck(red_card, EmptyDeck())
+
+# PUZZLE ==========================================================================================
+
+@dataclass
+class State:
+    start:ILoP
+    destination:ILoP
+    light_time:int # remmaining battery time
+    light_loc:str # start or destination
+
+#interface
+class ILoP(Protocol):
+    pass
+
+#implements ILoP
+class EmptyILoP:
+    pass
+
+#implements ILoP
+@dataclass
+class ConsILoP:
+    fst:Person
+    rst:ILoP
+
+@dataclass
+class Person:
+    name:str
+    time:int
