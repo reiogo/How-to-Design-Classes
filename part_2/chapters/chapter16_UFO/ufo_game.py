@@ -132,7 +132,8 @@ class AUP:
         return Shot(
                 Posn(self.location
                      + ((self.AUP_WIDTH//2) - (self.AUP_CANNON_WIDTH//4)),
-                    w.HEIGHT - (self.AUP_HEIGHT + self.AUP_CANNON_HEIGHT)))
+                    w.HEIGHT - (self.AUP_HEIGHT
+                                +(2 * self.AUP_CANNON_HEIGHT))))
 
 # a shot in flight, whose upper left corner is located at location
 @dataclass
