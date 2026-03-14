@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Protocol
 from dataclasses import dataclass
 import math
@@ -105,9 +106,24 @@ class AUP:
     AUP_WIDTH = AUP_UNIT * 40
     AUP_CANNON_HEIGHT = AUP_UNIT * 10
     AUP_CANNON_WIDTH = AUP_UNIT * 8
+    AUP_SPEED = 3
 
     def __repr__(self):
         return f"[AUP: {self.location}]"
+
+    # move the AUP according to key inputs
+    def move(self, s:str, w:UFOWorld) -> AUP:
+        #self.location
+        if s == "left":
+            if self.location - self.AUP_SPEED >= 0:
+                return AUP(self.location - self.AUP_SPEED)
+            else:
+                return AUP(0)
+        elif s == "right":
+            if self.location + self.AUP_SPEED <= w.WIDTH:
+                return AUP(self.location + self.AUP_SPEED)
+            else:
+                return AUP(w.WIDTH)
 
     # draw this AUP
     def draw(self, c:ICanvas, height:int) -> bool:
@@ -155,6 +171,21 @@ class Shot:
     def move(self) -> Shot:
         return Shot(Posn(self.location.x, self.location.y - 3), self.shotClr)
 
+
+    # determine the distance between two points
+    def distance(self,p1:Posn,p2:Posn) -> int:
+        return int(math.sqrt(((p1.x - p2.x) ** 2) + ((p1.y - p2.y) ** 2)))
+
+    # calculate whether this shot has collided with a UFO
+    # if shot and the ufo center is within 10 pixels of each other
+    def hit(self, u:UFO) -> bool:
+        HIT_RADIUS = 10
+        # self.location...
+        if self.distance(u.location, self.location) <= HIT_RADIUS:
+            return True
+        else:
+            return False
+
 #interface
 @dataclass
 class IShots(Protocol):
@@ -164,6 +195,9 @@ class IShots(Protocol):
 
     # move this list of shots
     def move(self) -> IShots:
+        ...
+    # check if any of the shots have hit the given UFO
+    def hit(self, u:UFO) -> bool:
         ...
 
 #implements IShots
@@ -177,6 +211,9 @@ class MTShots(IShots):
 
     def move(self) -> IShots:
         return self
+
+    def hit(self, u:UFO) -> bool:
+        return False
 
 #implements IShots
 @dataclass
@@ -198,6 +235,12 @@ class ConsShots(IShots):
         else:
             return  ConsShots(self.fst.move(), self.rst.move())
 
+    def hit(self, u:UFO) -> bool:
+        #self.fst.nnn() ... self.rst.mmm()
+        if self.fst.hit(u):
+            return True
+        else:
+            return self.rst.hit(u)
 
 # RUN ========================================================================================== 
 

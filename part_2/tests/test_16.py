@@ -106,8 +106,8 @@ def test_multiple_shots_move() -> None:
 
 def test_UFOWorld_shoot() -> None:
     AUP_LOCATION = 90
-    SHOT_START_X = 106
-    SHOT_START_Y = 480
+    SHOT_START_X = 108
+    SHOT_START_Y = 470
 
     a = AUP(AUP_LOCATION)
     u = UFO(Posn(100,5))
@@ -130,8 +130,8 @@ def test_UFOWorld_shoot() -> None:
 
 def test_AUP_fireShot() -> None:
     AUP_LOCATION = 90
-    SHOT_START_X = 106
-    SHOT_START_Y = 480
+    SHOT_START_X = 108
+    SHOT_START_Y = 470
 
     a = AUP(AUP_LOCATION)
     u = UFO(Posn(100,5))
@@ -140,4 +140,32 @@ def test_AUP_fireShot() -> None:
 
     assert a.fireShot(w1) == Shot(Posn(SHOT_START_X,SHOT_START_Y))
 
+def test_AUP_move() -> None:
+    EDGE_RIGHT = 200
+    EDGE_LEFT = 0
 
+    a = AUP(90)
+    u = UFO(Posn(100,5))
+    s = Shot(Posn(112,480))
+    ls = ConsShots(s, MTShots())
+    w = UFOWorld(u,a,ls)
+
+    assert a.move("left", w) == AUP(87)
+    assert a.move("right", w) == AUP(93)
+    assert AUP(EDGE_RIGHT - 2).move("right",w) == AUP(EDGE_RIGHT)
+    assert AUP(EDGE_LEFT + 2).move("left",w) == AUP(EDGE_LEFT)
+
+def test_shots_hit() -> None:
+
+    u = UFO(Posn(100,5))
+    s1 = Shot(Posn(112,480))
+    s2 = Shot(Posn(112,470))
+    ls = ConsShots(s1,
+           ConsShots(s2,
+             MTShots()))
+    assert ls.hit(u) == False
+    assert ls.hit(UFO(Posn(112,480))) == True
+
+def test_shot_dist() -> None:
+    s1 = Shot(Posn(112,480))
+    assert s1.distance(Posn(4,9),Posn(1,5)) == 5
